@@ -1,5 +1,7 @@
 {
   "name": "camper-app",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }
