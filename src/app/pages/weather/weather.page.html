@@ -25,10 +25,5 @@
       <canvas id="weatherChartRainCanvas"></canvas>
     </ion-card-content>
   </ion-card>
-
-  <ion-card *ngIf="weather" class="avaluator-condition-questions">
-    <ion-card-content>
-      <div *ngFor="let time of weatherDates; let i = index">{{time}} : {{weatherTemp[i]}} *C | {{weatherWindMin[i]}} ({{weatherWindMax[i]}}) m/s | {{weatherRain[i]}} mm {{precipitationCategories[weatherPrecipitationCategory[i]]}}</div>
-    </ion-card-content>
-  </ion-card>
+  
 </ion-content>
