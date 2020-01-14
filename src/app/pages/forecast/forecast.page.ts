@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-forecast',
@@ -7,10 +7,5 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 })
 export class ForecastPage {
 
-  constructor() {
-  }
-
-  placeSelected() {
-  }
-
+  constructor() { }
 }

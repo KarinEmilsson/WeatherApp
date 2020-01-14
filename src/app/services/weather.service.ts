@@ -3,8 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { retry, catchError } from 'rxjs/operators';
- 
-import { WeatherModel, TimeSerie } from '../models/weather.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +10,7 @@ import { WeatherModel, TimeSerie } from '../models/weather.model';
 export class WeatherService {
   url = 'https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point';
  
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient){ }
 
   getWeather(long: string, lat: string): Observable<any> {
     return this.http

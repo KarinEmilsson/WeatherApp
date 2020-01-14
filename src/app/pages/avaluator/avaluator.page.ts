@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { typeWithParameters } from '@angular/compiler/src/render3/util';
+import { OptionsService } from '../../services/options.service';
 
 @Component({
   selector: 'app-avaluator',
@@ -7,7 +7,6 @@ import { typeWithParameters } from '@angular/compiler/src/render3/util';
   styleUrls: ['avaluator.page.scss']
 })
 export class AvaluatorPage {
-  language = 'en';
 
   private countAvalanceConditions: number = 0;
   private countTerrainCharacteristics: number = 0;
@@ -18,6 +17,10 @@ export class AvaluatorPage {
   evalStyle: string = "#424242";
   degrees1pChecked = false;
   degrees2pChecked = false;
+
+  constructor(private optService : OptionsService) { }
+
+  get language() { return this.optService.getSelectedLanguage(); }
 
   private setHeader() {
     switch(this.thisId)
@@ -34,7 +37,7 @@ export class AvaluatorPage {
             break;
           case "0-5": case "2-5": case "3-4": case "3-5": case "4-3": case "4-4": case "4-5": case "5-2": case "5-3": case "5-4": case "5-5": case "6-0": case "6-1": case "6-2": case "6-3": case "6-4": case "6-5":
             this.eval = "NOT RECOMMENDED"
-            this.evalsw = "INTE REKOMMENDERAT"
+            this.evalsw = "INTE rekommenderat"
             this.evalStyle = "red"
             break;
           default:
@@ -77,13 +80,4 @@ export class AvaluatorPage {
         this.degrees1pChecked = false;
       }
   }
-
-  changeLang(lang : string) {
-    this.language = lang;
-
-    console.log(this.language);
-  }
-
-  constructor() { }
-
 }

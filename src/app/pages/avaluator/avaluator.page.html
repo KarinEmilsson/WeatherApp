@@ -1,12 +1,11 @@
 <ion-header>
   <ion-toolbar>
     <ion-title style="font-size: 1rem;">
-      
-      <div *ngIf="language == 'en'">Avaluator - {{counter}}p. <span [style.color]="evalStyle">{{eval}}</span></div>
-      <div *ngIf="language == 'sw'">Avaluator - {{counter}}p. <span [style.color]="evalStyle">{{evalsw}}</span></div>
+      <div style="float: left" *ngIf="language == 'en'">Avaluator - {{counter}}p. <span [style.color]="evalStyle">{{eval}}</span></div>
+      <div style="float: left" *ngIf="language == 'sw'">Avaluator - {{counter}}p. <span [style.color]="evalStyle">{{evalsw}}</span></div>
       <span style="float: right"> 
-        <img width="15px" (click)="changeLang('en')" src="../../../assets/icon/english.jpg">
-        <img width="15px" (click)="changeLang('sw')" src="../../../assets/icon/swedish.png">
+        <img width="15px" (click)="optService.setSelectedLanguage('en')" src="../../../assets/icon/english.jpg">
+        <img width="15px" (click)="optService.setSelectedLanguage('sw')" src="../../../assets/icon/swedish.png">
       </span>
     </ion-title>
   </ion-toolbar>
@@ -112,7 +111,7 @@
           <ion-row>
             <ion-col size="9" style="background-color: lightskyblue; color: darkblue;">
               <div *ngIf="language == 'en'">Slope steepness between 30 and 35 degrees?</div>
-              <div *ngIf="language == 'en'">Slope steepness between 30 and 35 degrees?</div>
+              <div *ngIf="language == 'sw'">Lutar backen mellan 30 och 35 grader?</div>
             </ion-col>
             <ion-col size="1" style="background-color: lightskyblue; color: darkblue;">
               <ion-checkbox id="degrees1p" [(ngModel)]="degrees1pChecked" (ionChange)="upTerrainCharacteristics($event, 1)"></ion-checkbox>
@@ -130,7 +129,7 @@
           <ion-row>
             <ion-col size="9" style="background-color: lightskyblue; color: darkblue;">
               <div *ngIf="language == 'en'">Slope steeper than 35 degrees?</div>
-              <div *ngIf="language == 'en'">Slope steeper than 35 degrees?</div>
+              <div *ngIf="language == 'sw'">Lutar backen mer än 35 grader?</div>
             </ion-col>
             <ion-col size="1" style="background-color: lightskyblue; color: darkblue;">
               <ion-checkbox id="degrees2p" [(ngModel)]="degrees2pChecked" (ionChange)="upTerrainCharacteristics($event, 2)"></ion-checkbox>
@@ -142,7 +141,7 @@
           <ion-row>
             <ion-col size="9" style="background-color: lightskyblue; color: darkblue;">
               <div *ngIf="language == 'en'">Any gullies, trees or cliffs that increases the consequenses of being caught in an avalanche?</div>
-              <div *ngIf="language == 'en'">Any gullies, trees or cliffs that increases the consequenses of being caught in an avalanche?</div>
+              <div *ngIf="language == 'sw'">Några raviner, träd eller klippor som ökar konsekvenserna av att fångas i en lavin?</div>
             </ion-col>
             <ion-col size="1" style="background-color: lightskyblue; color: darkblue;">
               <ion-checkbox (ionChange)="upTerrainCharacteristics($event, 1)"></ion-checkbox>
@@ -154,7 +153,7 @@
           <ion-row>
             <ion-col size="9" style="background-color: lightskyblue; color: darkblue;">
               <div *ngIf="language == 'en'">Is the slope convex or unsupported?</div>
-              <div *ngIf="language == 'en'">Is the slope convex or unsupported?</div>
+              <div *ngIf="language == 'sw'">Är backen konvex eller oskyddad?</div>
             </ion-col>
             <ion-col size="1" style="background-color: lightskyblue; color: darkblue;">
               <ion-checkbox (ionChange)="upTerrainCharacteristics($event, 1)"></ion-checkbox>
@@ -166,7 +165,7 @@
           <ion-row>
             <ion-col size="9" style="background-color: lightskyblue; color: darkblue;">
               <div *ngIf="language == 'en'">Is the slope in the alpine, in a sparsely treed area or in open forest?</div>
-              <div *ngIf="language == 'en'">Is the slope in the alpine, in a sparsely treed area or in open forest?</div>
+              <div *ngIf="language == 'sw'">Är sluttningen i det alpina, i ett glessträckt område eller i öppen skog?</div>
             </ion-col>
             <ion-col size="1" style="background-color: lightskyblue; color: darkblue;">
               <ion-checkbox (ionChange)="upTerrainCharacteristics($event, 1)"></ion-checkbox>
@@ -185,8 +184,8 @@
     <div *ngIf="language == 'sw'">Utvärdering: {{counter}}p. <span [style.color]="evalStyle">{{evalsw}}</span></div>
     <ion-grid style="text-align: center; color:rgb(255, 255, 255);">
       <ion-row>
-        <ion-col *ngIf="language=='en'" size="1" style="color: black; font-size: 0.8rem;">A<br>v<br>a<br>l<br>a<br>n<br><br>c<br>o<br>n<br>d</ion-col>
-        <ion-col *ngIf="language=='sw'" size="1" style="color: black; font-size: 0.9rem;">L<br>a<br>v<br>i<br>n<br>f<br>ö<br>r<br>h</ion-col>
+        <ion-col *ngIf="language=='en'" size="1" style="color: black; font-size: 0.7rem;">A<br>v<br>a<br>l<br>a<br>n<br>c<br>h<br>e<br><br>c<br>o<br>n<br>d</ion-col>
+        <ion-col *ngIf="language=='sw'" size="1" style="color: black; font-size: 0.6rem;">L<br>a<br>v<br>i<br>n<br>f<br>ö<br>r<br>h<br>å<br>l<br>l<br>a<br>n<br>d<br>e<br>n</ion-col>
         <ion-col>
       <ion-row>
         <ion-col style="background-color: lightgray; color:gray;">

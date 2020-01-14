@@ -1,14 +1,19 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      Weather
+      <div style="float: left" *ngIf="language == 'en'">Weather</div>
+      <div style="float: left" *ngIf="language == 'sw'">Väder</div>
+      <span style="float: right"> 
+        <img width="15px" (click)="optService.setSelectedLanguage('en')" src="../../../assets/icon/english.jpg">
+        <img width="15px" (click)="optService.setSelectedLanguage('sw')" src="../../../assets/icon/swedish.png">
+      </span>
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <ion-searchbar [(ngModel)]="coord"></ion-searchbar>
-  <ion-select [(ngModel)]="coord" (ionChange)="getWeather()" interface="popover" placeholder="Select place">
+  <ion-select [(ngModel)]="coord" (ionChange)="getWeather()" interface="popover" [placeholder]="language == 'en' ? 'Select place' : 'Välj plats'">
     <ion-select-option value="18.723;68.361">Abiskofjällen</ion-select-option>
     <ion-select-option value="18.112;68.422">Riksgränsenfjällen</ion-select-option>
     <ion-select-option value="18.586;67.878">Kebnekaisefjällen</ion-select-option>

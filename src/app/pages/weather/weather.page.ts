@@ -1,6 +1,7 @@
 import { WeatherService } from '../../services/weather.service';
 import { WeatherModel } from '../../models/weather.model';
 import { PrecipitationCategories } from '../../models/precipitationCategories.enum';
+import { OptionsService } from '../../services/options.service';
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { Chart } from 'chart.js';
 import { Geolocation } from '@ionic-native/geolocation';
@@ -18,10 +19,11 @@ export class WeatherPage implements OnInit {
   search: Observable<any>;
   weather: WeatherModel;
 
-  constructor(/*private geolocation : Geolocation, */private weatherService: WeatherService, private elementRef: ElementRef) {
+  constructor(/*private geolocation : Geolocation, */private weatherService: WeatherService, private elementRef: ElementRef, private optService: OptionsService) {
     this.getLocationAndWeather();
   }
 
+  get language() { return this.optService.getSelectedLanguage(); }
   get precipitationCategories() { return PrecipitationCategories; }
 
   getLocationAndWeather() {
@@ -62,7 +64,7 @@ export class WeatherPage implements OnInit {
     new Chart(weatherChartTempCanvas, {
       type: "line",
       data: {
-        labels: this.weather.timeSeries.map(item => moment(item.validTime).format('DD. HH\'')),
+        labels: this.weather.timeSeries.map(item => moment(item.validTime).format('DD HH\'')),
         datasets: [
           {
             label: 'Temp (°C)                                         ',
@@ -92,7 +94,9 @@ export class WeatherPage implements OnInit {
         labels: this.weather.timeSeries.map(item => moment(item.validTime).format('DD. HH\'')),
         datasets: [
           {
-            label: 'Wind min (m/s)                               ',
+            label: this.language == 'en' ? 
+              'Wind min (m/s)                               ' : 
+              'Vind min (m/s)                               ',
             data: this.weather.timeSeries.map(
               item => item.parameters.filter(p => p.name == 'ws').map(temp => temp.values[0])[0]),
             borderColor: "grey",
@@ -100,7 +104,9 @@ export class WeatherPage implements OnInit {
             pointRadius: 2
           },
           {
-            label: 'Arrows: Dir and wind max (m/s)     ',
+            label: this.language == 'en' ? 
+            'Arrows: Dir and wind max (m/s)     ' : 
+            'Pilar: Riktning och vind max (m/s) ',
             data: this.weather.timeSeries.map(
               item => item.parameters.filter(p => p.name == 'gust').map(temp => temp.values[0])[0]),
             fill: false,
@@ -126,14 +132,18 @@ export class WeatherPage implements OnInit {
         labels: this.weather.timeSeries.map(item => moment(item.validTime).format('DD. HH\'')),
         datasets: [
           {
-            label: 'Precipitation min (mm)                  ',
+            label: this.language == 'en' ? 
+            'Precipitation min (mm)                   ' : 
+            'Nederbörd min (m/s)                        ',
             data: this.weather.timeSeries.map(item => item.parameters.filter(p => p.name == 'pmin').map(temp => temp.values[0])[0]),
             borderColor: "blue",
             fill: false,
             pointRadius: 2
           },
           {
-            label: 'Icons: Precip. type and max (mm)',
+            label: this.language == 'en' ? 
+            'Icons: Precip. type and max (mm) ' : 
+            'Ikoner: Typ av nedb. och max (mm)',
             data: this.weather.timeSeries.map(item => item.parameters.filter(p => p.name == 'pmax').map(temp => temp.values[0])[0]),
             borderColor: "lightblue",
             fill: false,
