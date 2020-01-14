@@ -1,7 +1,13 @@
 <ion-header>
   <ion-toolbar>
     <ion-title style="font-size: 1rem;">
-      Avaluator - {{counter}}p. <span [style.color]="evalStyle">{{eval}}</span>
+      
+      <div *ngIf="language == 'en'">Avaluator - {{counter}}p. <span [style.color]="evalStyle">{{eval}}</span></div>
+      <div *ngIf="language == 'sw'">Avaluator - {{counter}}p. <span [style.color]="evalStyle">{{evalsw}}</span></div>
+      <span style="float: right"> 
+        <img width="15px" (click)="changeLang('en')" src="../../../assets/icon/english.jpg">
+        <img width="15px" (click)="changeLang('sw')" src="../../../assets/icon/swedish.png">
+      </span>
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -9,11 +15,13 @@
 <ion-content>
     <ion-card class="avaluator-condition-questions">
       <ion-card-content>
-        Avalanche conditions
+        <div *ngIf="language == 'en'">Avalanche conditions</div>
+        <div *ngIf="language == 'sw'">Lavinförhållanden</div>
         <ion-grid>
           <ion-row>
             <ion-col size="9" style="background-color: mediumblue; color: white;">
-              <div>Regional avalanche danger rating "Considerable" or higher?</div>
+              <div *ngIf="language == 'en'">Regional avalanche danger rating "Considerable" or higher?</div>
+              <div *ngIf="language == 'sw'">Regional lavinprognos "Betydande" eller högre?</div>
             </ion-col>
             <ion-col size="1" style="background-color: mediumblue; color: white;">
               <ion-checkbox (ionChange)="upAvalanceConditions($event, 1)"></ion-checkbox>
@@ -24,7 +32,8 @@
           </ion-row>
           <ion-row>
             <ion-col size="9" style="background-color: mediumblue; color: white;">
-              <div>Is there a persistent or deep persistent slab problem?</div>
+              <div *ngIf="language == 'en'">Is there a persistent or deep persistent slab problem?</div>
+              <div *ngIf="language == 'sw'">Finns det ett ihållande eller djupt ihållande problem med snöflak?</div>
             </ion-col>
             <ion-col size="1" style="background-color: mediumblue; color: white;">
               <ion-checkbox (ionChange)="upAvalanceConditions($event, 1)"></ion-checkbox>
@@ -35,7 +44,8 @@
           </ion-row>
           <ion-row>
             <ion-col size="9" style="background-color: mediumblue; color: white;">
-              <div>Are there signs of slab avalanches from today or yesterday?</div>
+              <div *ngIf="language == 'en'">Are there signs of slab avalanches from today or yesterday?</div>
+              <div *ngIf="language == 'sw'">Finns det tecken på flakskred från i dag eller igår?</div>
             </ion-col>
             <ion-col size="1" style="background-color: mediumblue; color: white;">
               <ion-checkbox (ionChange)="upAvalanceConditions($event, 1)"></ion-checkbox>
@@ -46,8 +56,8 @@
           </ion-row>
           <ion-row>
             <ion-col size="9" style="background-color: mediumblue; color: white;">
-              <div>Are there signs of snowpack instability, shooting cracks or
-                drum-like sounds?</div>
+              <div *ngIf="language == 'en'">Are there signs of snowpack instability, shooting cracks or drum-like sounds?</div>
+              <div *ngIf="language == 'sw'">Finns det tecken på snöpacksinstabilitet, skjutsprickor eller trumliknande ljud?</div>
             </ion-col>
             <ion-col size="1" style="background-color: mediumblue; color: white;">
               <ion-checkbox (ionChange)="upAvalanceConditions($event, 1)"></ion-checkbox>
@@ -58,10 +68,13 @@
           </ion-row>
           <ion-row>
             <ion-col size="9" style="background-color: mediumblue; color: white;">
-              <div>Has there been loading within the past
+              <div *ngIf="language == 'en'">Has there been loading within the past
                 48 hours including > 25 cm of new
-                snow, significant wind
+                snow, has there been significant wind
                 transport or rain?</div>
+              <div *ngIf="language == 'sw'">Har det dumpat inom
+                48 timmar dvs > 25 cm nysnö, har det varit betydande vind
+                transport eller regn?</div>
             </ion-col>
             <ion-col size="1" style="background-color: mediumblue; color: white;">
               <ion-checkbox (ionChange)="upAvalanceConditions($event, 1)"></ion-checkbox>
@@ -72,9 +85,12 @@
           </ion-row>
           <ion-row>
             <ion-col size="9" style="background-color: mediumblue; color: white;">
-              <div>Has there been a recent rapid rise in
-                temperature to near 0 C, or is the upper
+              <div *ngIf="language == 'en'">Has there been a recent rapid rise in
+                temperature to near 0 °C, or is the upper
                 snowpack wet due to strong sun, abovefreezing air temperatures or rain?</div>
+              <div *ngIf="language == 'sw'">Har det skett en snabb temperaturuppgång nyligen 
+                till nära 0 °C, eller är det övre
+                snötäcket slaskigt pga stark sol, överfrysande lufttemperaturer eller regn?</div>
             </ion-col>
             <ion-col size="1" style="background-color: mediumblue; color: white;">
               <ion-checkbox (ionChange)="upAvalanceConditions($event, 1)"></ion-checkbox>
@@ -89,11 +105,14 @@
 
     <ion-card class="avaluator-terrain-questions">
       <ion-card-content>
-        Terrain characteristics
+        <div *ngIf="language == 'en'">Terrain characteristics</div>
+        <div *ngIf="language == 'sw'">Terrängegenskaper</div>
+        
         <ion-grid>
           <ion-row>
             <ion-col size="9" style="background-color: lightskyblue; color: darkblue;">
-              <div>Slope steepness between 30 and 35 degrees?</div>
+              <div *ngIf="language == 'en'">Slope steepness between 30 and 35 degrees?</div>
+              <div *ngIf="language == 'en'">Slope steepness between 30 and 35 degrees?</div>
             </ion-col>
             <ion-col size="1" style="background-color: lightskyblue; color: darkblue;">
               <ion-checkbox id="degrees1p" [(ngModel)]="degrees1pChecked" (ionChange)="upTerrainCharacteristics($event, 1)"></ion-checkbox>
@@ -104,12 +123,14 @@
           </ion-row>
           <ion-row>
             <ion-col size="12" style="background-color: lightskyblue; color: darkblue;">
-              <div>or</div>
+              <div *ngIf="language == 'en'">or</div>
+              <div *ngIf="language == 'sw'">eller</div>
             </ion-col>
           </ion-row>
           <ion-row>
             <ion-col size="9" style="background-color: lightskyblue; color: darkblue;">
-              <div>Slope steeper than 35 degrees?</div>
+              <div *ngIf="language == 'en'">Slope steeper than 35 degrees?</div>
+              <div *ngIf="language == 'en'">Slope steeper than 35 degrees?</div>
             </ion-col>
             <ion-col size="1" style="background-color: lightskyblue; color: darkblue;">
               <ion-checkbox id="degrees2p" [(ngModel)]="degrees2pChecked" (ionChange)="upTerrainCharacteristics($event, 2)"></ion-checkbox>
@@ -120,7 +141,8 @@
           </ion-row>
           <ion-row>
             <ion-col size="9" style="background-color: lightskyblue; color: darkblue;">
-              <div>Any gullies, trees or cliffs that increases the consequenses of being caught in an avalanche?</div>
+              <div *ngIf="language == 'en'">Any gullies, trees or cliffs that increases the consequenses of being caught in an avalanche?</div>
+              <div *ngIf="language == 'en'">Any gullies, trees or cliffs that increases the consequenses of being caught in an avalanche?</div>
             </ion-col>
             <ion-col size="1" style="background-color: lightskyblue; color: darkblue;">
               <ion-checkbox (ionChange)="upTerrainCharacteristics($event, 1)"></ion-checkbox>
@@ -131,7 +153,8 @@
           </ion-row>
           <ion-row>
             <ion-col size="9" style="background-color: lightskyblue; color: darkblue;">
-              <div>Is the slope convex or unsupported?</div>
+              <div *ngIf="language == 'en'">Is the slope convex or unsupported?</div>
+              <div *ngIf="language == 'en'">Is the slope convex or unsupported?</div>
             </ion-col>
             <ion-col size="1" style="background-color: lightskyblue; color: darkblue;">
               <ion-checkbox (ionChange)="upTerrainCharacteristics($event, 1)"></ion-checkbox>
@@ -142,7 +165,8 @@
           </ion-row>
           <ion-row>
             <ion-col size="9" style="background-color: lightskyblue; color: darkblue;">
-              <div>Is the slope in the alpine, in a sparsely treed area or in open forest?</div>
+              <div *ngIf="language == 'en'">Is the slope in the alpine, in a sparsely treed area or in open forest?</div>
+              <div *ngIf="language == 'en'">Is the slope in the alpine, in a sparsely treed area or in open forest?</div>
             </ion-col>
             <ion-col size="1" style="background-color: lightskyblue; color: darkblue;">
               <ion-checkbox (ionChange)="upTerrainCharacteristics($event, 1)"></ion-checkbox>
@@ -157,10 +181,12 @@
     
     <ion-card class="avaluator-questions">
     <ion-card-content>
-    Evaluation: {{counter}}p. <span [style.color]="evalStyle">{{eval}}</span>
+    <div *ngIf="language == 'en'">Evaluation: {{counter}}p. <span [style.color]="evalStyle">{{eval}}</span></div>
+    <div *ngIf="language == 'sw'">Utvärdering: {{counter}}p. <span [style.color]="evalStyle">{{evalsw}}</span></div>
     <ion-grid style="text-align: center; color:rgb(255, 255, 255);">
       <ion-row>
-        <ion-col size="1" style="color: black; font-size: 0.8rem;">A<br>v<br>a<br>l<br>a<br>n<br><br>c<br>o<br>n<br>d</ion-col>
+        <ion-col *ngIf="language=='en'" size="1" style="color: black; font-size: 0.8rem;">A<br>v<br>a<br>l<br>a<br>n<br><br>c<br>o<br>n<br>d</ion-col>
+        <ion-col *ngIf="language=='sw'" size="1" style="color: black; font-size: 0.9rem;">L<br>a<br>v<br>i<br>n<br>f<br>ö<br>r<br>h</ion-col>
         <ion-col>
       <ion-row>
         <ion-col style="background-color: lightgray; color:gray;">
@@ -348,7 +374,8 @@
       </ion-row>
       <ion-row>
         <ion-col size="1"></ion-col>
-        <ion-col size="11" [style.color]="'black'">Therain characteristics</ion-col>
+        <ion-col size="11" [style.color]="'black'" *ngIf="language == 'en'">Terrain characteristics</ion-col>
+        <ion-col size="11" [style.color]="'black'" *ngIf="language == 'sw'">Terrängegenskaper</ion-col>
       </ion-row>
     </ion-col>
   </ion-row>

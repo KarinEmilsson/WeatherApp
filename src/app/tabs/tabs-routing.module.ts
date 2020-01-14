@@ -28,12 +28,12 @@ const routes: Routes = [
         ]
       },
       {
-        path: 'risk',
+        path: 'forecast',
         children: [
           {
             path: '',
             loadChildren: () =>
-              import('../pages/risk/risk.module').then(m => m.RiskPageModule)
+              import('../pages/forecast/forecast.module').then(m => m.ForecastPageModule)
           }
         ]
       },

@@ -18,8 +18,8 @@ export class WeatherService {
     return this.http
         .get(`${this.url}/lon/${long}/lat/${lat}/data.json`)
         .pipe(
-            retry(3),
-            catchError(this.handleError)
+          retry(3),
+          catchError(this.handleError)
         );
   }
 
@@ -27,9 +27,8 @@ export class WeatherService {
     let errorMessage: string;
     // Set error message
     (error.error instanceof ErrorEvent) ?
-        errorMessage = error.error.message :
-        errorMessage = `Error Code: ${error.code}\nMessage: ${error.message}`;
-    console.log(errorMessage);
+      errorMessage = error.error.message :
+      errorMessage = `Error getting weather: ${error.code}\nMessage: ${error.message}`;
     return throwError(errorMessage);
   }
 }

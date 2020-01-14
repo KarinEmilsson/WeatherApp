@@ -3,7 +3,9 @@ import { WeatherModel } from '../../models/weather.model';
 import { PrecipitationCategories } from '../../models/precipitationCategories.enum';
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { Chart } from 'chart.js';
+import { Geolocation } from '@ionic-native/geolocation';
 import { Observable } from 'rxjs';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-weather',
@@ -12,30 +14,46 @@ import { Observable } from 'rxjs';
 })
 export class WeatherPage implements OnInit {
   
-  crd = 'Åre';
-  coordinates = [{city: 'Åre', coord: '13.055;63.409'}, {city: 'Hamburg', coord: '9.994;53.551'}];
+  coord = '13.011;63.423';
   search: Observable<any>;
   weather: WeatherModel;
 
-  constructor(private weatherService: WeatherService, private elementRef: ElementRef) {
-    this.getWeather();
-   }
+  constructor(/*private geolocation : Geolocation, */private weatherService: WeatherService, private elementRef: ElementRef) {
+    this.getLocationAndWeather();
+  }
 
   get precipitationCategories() { return PrecipitationCategories; }
-  
-  getWeather() {
-    let coord = this.coordinates.filter(item => item.city == this.crd)[0]; 
 
-    if(coord) {
-      this.weatherService.getWeather(coord.coord.split(";")[0], coord.coord.split(";")[1]).subscribe(result => {
+  getLocationAndWeather() {
+    //this.geolocation.getCurrentPosition((resp) => {
+    navigator.geolocation.getCurrentPosition((resp) => {
+      let lon : string = resp.coords.longitude + '';
+      let lat : string = resp.coords.latitude + '';
+      this.coord = lon.slice(0, 6) + ';' + lat.slice(0, 6);
+      this.getWeather();
+    }, (error: any) => {
+      let errorMessage: string;
+      // Set error message
+      (error.error instanceof ErrorEvent) ?
+        errorMessage = error.error.message :
+        errorMessage = `Error getting location: ${error.code}\nMessage: ${error.message}`;
+      console.log(errorMessage);
+    });
+  }
+
+  getWeather() {
+    if(this.coord.length > 12) {
+      this.weatherService.getWeather(this.coord.split(";")[0], this.coord.split(";")[1]).subscribe(result => {
         if(result) {
-          this.weather = result;
+          let r: WeatherModel = result;
+          this.weather = new WeatherModel();
+          this.weather.timeSeries = r.timeSeries.slice(0, 34);
 
           this.setTempGraph();
           this.setWindGraph();
           this.setRainGraph();
         }
-      });
+      }, error => { console.log(error); });
     }
   }
 
@@ -44,10 +62,10 @@ export class WeatherPage implements OnInit {
     new Chart(weatherChartTempCanvas, {
       type: "line",
       data: {
-        labels: this.weather.timeSeries.map(item => '-'),//item.validTime[0]),
+        labels: this.weather.timeSeries.map(item => moment(item.validTime).format('DD. HH\'')),
         datasets: [
           {
-            label: 'Temp (*C)                                       ',
+            label: 'Temp (°C)                                         ',
             data: this.weather.timeSeries.map(item => item.parameters.filter(p => p.name == 't').map(temp => temp.values[0])[0]),
             borderColor: "pink",
             fill: false,
@@ -71,7 +89,7 @@ export class WeatherPage implements OnInit {
     new Chart(weatherChartWindCanvas, {
       type: "line",
       data: {
-        labels: this.weather.timeSeries.map(item => '-'),//item.validTime[0]),
+        labels: this.weather.timeSeries.map(item => moment(item.validTime).format('DD. HH\'')),
         datasets: [
           {
             label: 'Wind min (m/s)                               ',
@@ -105,7 +123,7 @@ export class WeatherPage implements OnInit {
     new Chart(weatherChartRainCanvas, {
       type: "line",
       data: {
-        labels: this.weather.timeSeries.map(item => '-'),//item.validTime[0]),
+        labels: this.weather.timeSeries.map(item => moment(item.validTime).format('DD. HH\'')),
         datasets: [
           {
             label: 'Precipitation min (mm)                  ',
@@ -139,36 +157,36 @@ export class WeatherPage implements OnInit {
   {
     var N = new Image();
     N.src = '../../../assets/icon/N.png';
-    N.height = 5;
-    N.width = 4;
+    N.height = 6;
+    N.width = 6;
     var NE = new Image();
     NE.src = '../../../assets/icon/NE.png';
-    NE.height = 5;
-    NE.width = 4;
+    NE.height = 6;
+    NE.width = 6;
     var E = new Image();
     E.src = '../../../assets/icon/E.png';
-    E.height = 5;
-    E.width = 4;
+    E.height = 6;
+    E.width = 6;
     var SE = new Image();
     SE.src = '../../../assets/icon/SE.png';
-    SE.height = 5;
-    SE.width = 4;
+    SE.height = 6;
+    SE.width = 6;
     var S = new Image();
     S.src = '../../../assets/icon/S.png';
-    S.height = 5;
-    S.width = 4;
+    S.height = 6;
+    S.width = 6;
     var SW = new Image();
     SW.src = '../../../assets/icon/SW.png';
-    SW.height = 5;
-    SW.width = 4;
+    SW.height = 6;
+    SW.width = 6;
     var W = new Image();
     W.src = '../../../assets/icon/W.png';
-    W.height = 5;
-    W.width = 4;
+    W.height = 6;
+    W.width = 6;
     var NW = new Image();
     NW.src = '../../../assets/icon/NW.png';
-    NW.height = 5;
-    NW.width = 4;
+    NW.height = 6;
+    NW.width = 6;
 
     if(dir >= 0 && dir <= 22 || dir >= 338 && dir <= 360) {
       return N;
@@ -197,7 +215,6 @@ export class WeatherPage implements OnInit {
   }
 
   setPrecipIcon(pcat: PrecipitationCategories) {
-    console.log(pcat);
     switch(pcat)
     {
       case PrecipitationCategories.Snow: 
@@ -227,10 +244,7 @@ export class WeatherPage implements OnInit {
   setPrecipIconRadius(pcat: PrecipitationCategories) {
     switch(pcat)
     {
-      case PrecipitationCategories.Rain: 
-        return 3;
-        break;
-      case PrecipitationCategories["No precipitation"]:
+      case PrecipitationCategories.Rain: case PrecipitationCategories["No precipitation"]:
         return 2;
         break;
       default: 
