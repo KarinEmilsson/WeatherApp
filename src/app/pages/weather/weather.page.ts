@@ -1,5 +1,8 @@
 import { WeatherService } from '../../services/weather.service';
+import { CoordinatesService } from '../../services/coordinates.service';
 import { WeatherModel } from '../../models/weather.model';
+import { PlaceModel } from '../../models/place.model';
+import { PlaceCoordinatesModel } from '../../models/place.model';
 import { PrecipitationCategories } from '../../models/precipitationCategories.enum';
 import { OptionsService } from '../../services/options.service';
 import { Component, OnInit, ElementRef } from '@angular/core';
@@ -15,11 +18,30 @@ import * as moment from 'moment';
 })
 export class WeatherPage implements OnInit {
   
+  searchedPlace = '';
   coord = '13.011;63.423';
   search: Observable<any>;
   weather: WeatherModel;
 
-  constructor(/*private geolocation : Geolocation, */private weatherService: WeatherService, private elementRef: ElementRef, private optService: OptionsService) {
+  weatherChart;
+  weatherWindChart;
+  weatherPrecipChart;
+
+  places = [
+    { coord: '18.723;68.361', place: 'Abiskofjällen'},
+    { coord: '18.112;68.422', place: 'Riksgränsenfjällen'},
+    { coord: '18.586;67.878', place: 'Kebnekaisefjällen'},
+    { coord: '15.301;65.925', place: 'Västra Vindelfjällen'},
+    { coord: '15.494;65.143', place: 'Södra Lapplandsfjällen'},
+    { coord: '13.011;63.423', place: 'Södra Jämtlandsfjällen'},
+    { coord: '12.455;62.747', place: 'Västra Härjedalsfjällen'}
+  ];
+
+  constructor(/*private geolocation : Geolocation, */
+    private weatherService: WeatherService, 
+    private coordinatesService: CoordinatesService, 
+    private elementRef: ElementRef, 
+    private optService: OptionsService) {
     this.getLocationAndWeather();
   }
 
@@ -32,6 +54,7 @@ export class WeatherPage implements OnInit {
       let lon : string = resp.coords.longitude + '';
       let lat : string = resp.coords.latitude + '';
       this.coord = lon.slice(0, 6) + ';' + lat.slice(0, 6);
+      this.getPlace();
       this.getWeather();
     }, (error: any) => {
       let errorMessage: string;
@@ -43,11 +66,47 @@ export class WeatherPage implements OnInit {
     });
   }
 
+  getPlace() {
+    this.coordinatesService.getPlaceFromCoordinates(this.coord.split(";")[0], this.coord.split(";")[1]).subscribe(result => {
+      if(result) {
+        let r: PlaceModel = result;
+        if(r) {
+          this.searchedPlace = r.address.village;
+        }
+    }
+    }, error => { console.log(error); });
+  }
+
+  searchPlace(e) {
+    this.coordinatesService.searchPlace(e.currentTarget.value).subscribe(result => {
+      if(result) {
+        let r: PlaceCoordinatesModel[] = result;
+        if(r) {
+          let swedishResult = r.filter(s => s.display_name.includes("Sweden"));
+          if(swedishResult && swedishResult.length > 0) {
+            this.coord = r[0].lon.slice(0, 6) + ';' + r[0].lat.slice(0, 6);
+            this.getWeather();
+            this.searchedPlace = swedishResult[0].display_name.split(',')[0] + ', ' + swedishResult[0].display_name.split(',')[1];
+          }
+          else this.searchedPlace = 'No search result'
+        }
+      }
+    }, error => { console.log(error); });
+  }
+
+  getWeatherFromDd(e) { 
+    let checkIfChangedValueIsChangedFromDropDown = this.places.filter(p => p.coord == e.currentTarget.value)[0]; 
+    if(checkIfChangedValueIsChangedFromDropDown) {
+      this.searchedPlace = '';
+     this.getWeather(); 
+    }
+  }
+
   getWeather() {
-    if(this.coord.length > 12) {
       this.weatherService.getWeather(this.coord.split(";")[0], this.coord.split(";")[1]).subscribe(result => {
-        if(result) {
-          let r: WeatherModel = result;
+      if(result) {
+        let r: WeatherModel = result;
+        if(r) {
           this.weather = new WeatherModel();
           this.weather.timeSeries = r.timeSeries.slice(0, 34);
 
@@ -55,13 +114,15 @@ export class WeatherPage implements OnInit {
           this.setWindGraph();
           this.setRainGraph();
         }
-      }, error => { console.log(error); });
-    }
+      }
+    }, error => { console.log(error); });
   }
 
   private setTempGraph() {
+    if(this.weatherChart) this.weatherChart.destroy();
+
     let weatherChartTempCanvas = this.elementRef.nativeElement.querySelector('#weatherChartTempCanvas');
-    new Chart(weatherChartTempCanvas, {
+    this.weatherChart = new Chart(weatherChartTempCanvas, {
       type: "line",
       data: {
         labels: this.weather.timeSeries.map(item => moment(item.validTime).format('DD HH\'')),
@@ -86,17 +147,18 @@ export class WeatherPage implements OnInit {
   }
 
   private setWindGraph() {
+    if(this.weatherWindChart) this.weatherWindChart.destroy();
+
     let weatherChartWindCanvas = this.elementRef.nativeElement.querySelector('#weatherChartWindCanvas');
-    
-    new Chart(weatherChartWindCanvas, {
+    this.weatherWindChart = new Chart(weatherChartWindCanvas, {
       type: "line",
       data: {
         labels: this.weather.timeSeries.map(item => moment(item.validTime).format('DD. HH\'')),
         datasets: [
           {
             label: this.language == 'en' ? 
-              'Wind min (m/s)                               ' : 
-              'Vind min (m/s)                               ',
+              'Wind min (m/s)                                 ' : 
+              'Vind min (m/s)                                 ',
             data: this.weather.timeSeries.map(
               item => item.parameters.filter(p => p.name == 'ws').map(temp => temp.values[0])[0]),
             borderColor: "grey",
@@ -125,8 +187,10 @@ export class WeatherPage implements OnInit {
   }
 
   private setRainGraph() {
+    if(this.weatherPrecipChart) this.weatherPrecipChart.destroy();
+
     let weatherChartRainCanvas = this.elementRef.nativeElement.querySelector('#weatherChartRainCanvas');
-    new Chart(weatherChartRainCanvas, {
+    this.weatherPrecipChart = new Chart(weatherChartRainCanvas, {
       type: "line",
       data: {
         labels: this.weather.timeSeries.map(item => moment(item.validTime).format('DD. HH\'')),

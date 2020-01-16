@@ -12,15 +12,9 @@
 </ion-header>
 
 <ion-content>
-  <ion-searchbar [(ngModel)]="coord"></ion-searchbar>
-  <ion-select [(ngModel)]="coord" (ionChange)="getWeather()" interface="popover" [placeholder]="language == 'en' ? 'Select place' : 'Välj plats'">
-    <ion-select-option value="18.723;68.361">Abiskofjällen</ion-select-option>
-    <ion-select-option value="18.112;68.422">Riksgränsenfjällen</ion-select-option>
-    <ion-select-option value="18.586;67.878">Kebnekaisefjällen</ion-select-option>
-    <ion-select-option value="15.301;65.925">Västra Vindelfjällen</ion-select-option>
-    <ion-select-option value="15.494;65.143">Södra Lapplandsfjällen</ion-select-option>
-    <ion-select-option value="13.011;63.423">Södra Jämtlandsfjällen</ion-select-option>
-    <ion-select-option value="12.455;62.747">Västra Härjedalsfjällen</ion-select-option>
+  <ion-searchbar [(ngModel)]="searchedPlace" (search)="searchPlace($event)"></ion-searchbar>
+  <ion-select [(ngModel)]="coord" (ionChange)="getWeatherFromDd($event)" interface="popover" [placeholder]="language == 'en' ? 'Select place' : 'Välj plats'">
+    <ion-select-option *ngFor="let p of places;" [value]="p.coord">{{p.place}}</ion-select-option>
   </ion-select>
   <ion-card>
     <ion-card-content>
