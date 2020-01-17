@@ -2,7 +2,6 @@ import { WeatherService } from '../../services/weather.service';
 import { CoordinatesService } from '../../services/coordinates.service';
 import { WeatherModel } from '../../models/weather.model';
 import { PlaceModel } from '../../models/place.model';
-import { PlaceCoordinatesModel } from '../../models/place.model';
 import { PrecipitationCategories } from '../../models/precipitationCategories.enum';
 import { OptionsService } from '../../services/options.service';
 import { Component, OnInit, ElementRef } from '@angular/core';
@@ -70,8 +69,8 @@ export class WeatherPage implements OnInit {
     this.coordinatesService.getPlaceFromCoordinates(this.coord.split(";")[0], this.coord.split(";")[1]).subscribe(result => {
       if(result) {
         let r: PlaceModel = result;
-        if(r) {
-          this.searchedPlace = r.address.village;
+        if(r && r.features && r.features.length > 0) {
+          this.searchedPlace = r.features[0].properties.name + ', ' + r.features[0].properties.state + ', ' + r.features[0].properties.name;
         }
     }
     }, error => { console.log(error); });
@@ -80,13 +79,14 @@ export class WeatherPage implements OnInit {
   searchPlace(e) {
     this.coordinatesService.searchPlace(e.currentTarget.value).subscribe(result => {
       if(result) {
-        let r: PlaceCoordinatesModel[] = result;
-        if(r) {
-          let swedishResult = r.filter(s => s.display_name.includes("Sweden"));
+        let r: PlaceModel = result;
+        if(r && r.features && r.features.length > 0) {
+          let swedishResult = r.features.filter(s => s.properties.country == "Sweden");
           if(swedishResult && swedishResult.length > 0) {
-            this.coord = r[0].lon.slice(0, 6) + ';' + r[0].lat.slice(0, 6);
+          console.log(swedishResult[0].geometry.coordinates[1].toString());
+          this.coord = swedishResult[0].geometry.coordinates[0].toString().substring(0, 6) + ';' + swedishResult[0].geometry.coordinates[1].toString().substring(0, 6);
             this.getWeather();
-            this.searchedPlace = swedishResult[0].display_name.split(',')[0] + ', ' + swedishResult[0].display_name.split(',')[1];
+            this.searchedPlace = swedishResult[0].properties.name + ', ' + swedishResult[0].properties.state + ', ' + swedishResult[0].properties.name;
           }
           else this.searchedPlace = 'No search result'
         }

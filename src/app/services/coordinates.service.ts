@@ -8,13 +8,13 @@ import { retry, catchError } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class CoordinatesService {
-  url = 'https://nominatim.openstreetmap.org/';
+  url = 'https://photon.komoot.de';
  
   constructor(private http: HttpClient){ }
 
   searchPlace(search: string): Observable<any> {
     return this.http
-        .get(`${this.url}/search/${search}?format=json`)
+        .get(`${this.url}/api/?q=${search}`)
         .pipe(
           retry(3),
           catchError(this.handleError)
@@ -23,7 +23,7 @@ export class CoordinatesService {
 
   getPlaceFromCoordinates(long: string, lat: string): Observable<any> {
     return this.http
-        .get(`${this.url}/reverse?format=jsonv2&lat=${lat}&lon=${long}`)
+        .get(`${this.url}/reverse?lon=${long}&lat=${lat}`)
         .pipe(
           retry(3),
           catchError(this.handleError)

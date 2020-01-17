@@ -1,15 +1,15 @@
 export class PlaceModel {
-    public address : AddressModel;
+    public features : PlaceFeatureModel[];
 }
-
-export class AddressModel {
-    public village : string;
+export class PlaceFeatureModel {
+    public geometry : PlacesCoordinatesModel;
+    public properties : PlacesPropertiesModel;
+}
+export class PlacesCoordinatesModel {
+    public coordinates : number[];
+}
+export class PlacesPropertiesModel {
+    public name : string;
+    public state : string;
     public country : string;
-}
-
-
-export class PlaceCoordinatesModel {
-    public lat : string;
-    public lon : string;
-    public display_name : string;
 }
