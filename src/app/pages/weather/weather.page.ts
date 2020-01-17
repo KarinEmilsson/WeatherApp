@@ -3,10 +3,10 @@ import { CoordinatesService } from '../../services/coordinates.service';
 import { WeatherModel } from '../../models/weather.model';
 import { PlaceModel } from '../../models/place.model';
 import { PrecipitationCategories } from '../../models/precipitationCategories.enum';
+import { WeatherSymbols } from '../../models/weatherSymbols.enum';
 import { OptionsService } from '../../services/options.service';
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { Chart } from 'chart.js';
-import { Geolocation } from '@ionic-native/geolocation';
 import { Observable } from 'rxjs';
 import * as moment from 'moment';
 
@@ -46,6 +46,7 @@ export class WeatherPage implements OnInit {
 
   get language() { return this.optService.getSelectedLanguage(); }
   get precipitationCategories() { return PrecipitationCategories; }
+  get weatherSymbols() { return WeatherSymbols; }
 
   getLocationAndWeather() {
     //this.geolocation.getCurrentPosition((resp) => {
@@ -133,6 +134,15 @@ export class WeatherPage implements OnInit {
             borderColor: "pink",
             fill: false,
             pointRadius: 2
+          },
+          {
+            label: this.language == 'en' ? 
+            'No weather icon - see precip. graph' :
+            'Ingen väderikon - se nederb. grapg ',
+            data: this.weather.timeSeries.map(item => item.parameters.filter(p => p.name == 't').map(temp => temp.values[0])[0] + 2),
+            fill: false,
+            showLine: false,
+            pointStyle: this.weather.timeSeries.map(item => item.parameters.filter(p => p.name == 'Wsymb2').map(Wsymb2 => this.setWeatherSymbol(Wsymb2.values[0]))[0])
           }
         ],
         fill: false
@@ -323,6 +333,83 @@ export class WeatherPage implements OnInit {
         break;
       default: 
         return 4;
+        break;
+    }
+  }
+
+  setWeatherSymbol(symb: WeatherSymbols) {
+    var Clear = new Image();
+    Clear.src = '../../../assets/icon/Clear.png';
+    Clear.height = 9;
+    Clear.width = 9;
+    var Cloudy = new Image();
+    Cloudy.src = '../../../assets/icon/Cloudy.png';
+    Cloudy.height = 9;
+    Cloudy.width = 9;
+    var Fog = new Image();
+    Fog.src = '../../../assets/icon/Fog.png';
+    Fog.height = 9;
+    Fog.width = 9;
+    var Halfclear = new Image();
+    Halfclear.src = '../../../assets/icon/Halfclear.png';
+    Halfclear.height = 9;
+    Halfclear.width = 9;
+    var NearlyClear = new Image();
+    NearlyClear.src = '../../../assets/icon/NearlyClear.png';
+    NearlyClear.height = 9;
+    NearlyClear.width = 9;
+    var Overcast = new Image();
+    Overcast.src = '../../../assets/icon/Overcast.png';
+    Overcast.height = 9;
+    Overcast.width = 9;
+    var Thunder = new Image();
+    Thunder.src = '../../../assets/icon/Thunder.png';
+    Thunder.height = 9;
+    Thunder.width = 9;
+    var Thunderstorm = new Image();
+    Thunderstorm.src = '../../../assets/icon/Thunderstorm.png';
+    Thunderstorm.height = 9;
+    Thunderstorm.width = 9;
+    var Variable = new Image();
+    Variable.src = '../../../assets/icon/Variable.png';
+    Variable.height = 9;
+    Variable.width = 9;
+    var None = new Image();
+    None.src = '../../../assets/icon/None.png';
+    None.height = 9;
+    None.width = 9;
+    
+    switch(symb)
+    {
+      case WeatherSymbols["Clear sky"]: 
+        return Clear;
+        break;
+      case WeatherSymbols["Cloudy sky"]: 
+        return Cloudy;
+        break;
+      case WeatherSymbols.Fog: 
+        return Fog;
+        break;
+      case WeatherSymbols["Halfclear sky"]: 
+        return Halfclear;
+        break;
+      case WeatherSymbols["Nearly clear sky"]: 
+        return NearlyClear;
+        break;
+      case WeatherSymbols.Overcast: 
+        return Overcast;
+        break; 
+        case WeatherSymbols.Thunder: 
+        return Thunder;
+        break; 
+        case WeatherSymbols.Thunderstorm: 
+        return Thunderstorm;
+        break; 
+        case WeatherSymbols["Variable cloudiness"]: 
+        return Variable;
+        break;  
+      default: 
+        return Variable;
         break;
     }
   }
