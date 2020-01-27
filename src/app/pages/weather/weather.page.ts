@@ -129,7 +129,7 @@ export class WeatherPage implements OnInit {
         labels: this.weather.timeSeries.map(item => moment(item.validTime).format('DD HH\'')),
         datasets: [
           {
-            label: 'Temp (°C)                                         ',
+            label: 'Temp (°C)                                            ',
             data: this.weather.timeSeries.map(item => item.parameters.filter(p => p.name == 't').map(temp => temp.values[0])[0]),
             borderColor: "pink",
             fill: false,
@@ -142,7 +142,8 @@ export class WeatherPage implements OnInit {
             data: this.weather.timeSeries.map(item => item.parameters.filter(p => p.name == 't').map(temp => temp.values[0])[0] + 2),
             fill: false,
             showLine: false,
-            pointStyle: this.weather.timeSeries.map(item => item.parameters.filter(p => p.name == 'Wsymb2').map(Wsymb2 => this.setWeatherSymbol(Wsymb2.values[0]))[0])
+            pointStyle: this.weather.timeSeries.map(item => item.parameters.filter(p => p.name == 'Wsymb2').map(Wsymb2 => this.setWeatherSymbol(Wsymb2.values[0]))[0]),
+            pointRadius: this.weather.timeSeries.map(item => item.parameters.filter(p => p.name == 'Wsymb2').map(Wsymb2 => this.setWeatherSymbol(Wsymb2.values[0]))[0] == 'circle' ? 0 : 0)
           }
         ],
         fill: false
@@ -374,10 +375,6 @@ export class WeatherPage implements OnInit {
     Variable.src = '../../../assets/icon/Variable.png';
     Variable.height = 9;
     Variable.width = 9;
-    var None = new Image();
-    None.src = '../../../assets/icon/None.png';
-    None.height = 9;
-    None.width = 9;
     
     switch(symb)
     {
@@ -409,7 +406,7 @@ export class WeatherPage implements OnInit {
         return Variable;
         break;  
       default: 
-        return Variable;
+        return 'circle';
         break;
     }
   }

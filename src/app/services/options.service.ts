@@ -7,7 +7,7 @@ import { OptionsModel } from '../models/options.model';
 export class OptionsService {
     private options: OptionsModel;
   
-    constructor() { this.options = new OptionsModel(); this.options.selectedLanguage = 'en'; }
+    constructor() { this.options = new OptionsModel(); this.options.selectedLanguage = 'sw'; }
 
     getSelectedLanguage(): string {
         return this.options.selectedLanguage;
