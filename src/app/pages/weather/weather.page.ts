@@ -45,6 +45,7 @@ export class WeatherPage implements OnInit {
   }
 
   get language() { return this.optService.getSelectedLanguage(); }
+  setLanguage(value) { this.optService.setSelectedLanguage(value); }
   get precipitationCategories() { return PrecipitationCategories; }
   get weatherSymbols() { return WeatherSymbols; }
 
@@ -62,7 +63,7 @@ export class WeatherPage implements OnInit {
       (error.error instanceof ErrorEvent) ?
         errorMessage = error.error.message :
         errorMessage = `Error getting location: ${error.code}\nMessage: ${error.message}`;
-      console.log(errorMessage);
+      // console.log(errorMessage);
     });
   }
 
@@ -74,7 +75,7 @@ export class WeatherPage implements OnInit {
           this.searchedPlace = r.features[0].properties.name + ', ' + r.features[0].properties.state + ', ' + r.features[0].properties.name;
         }
     }
-    }, error => { console.log(error); });
+    }, error => { /*console.log(error)*/; });
   }
 
   searchPlace(e) {
@@ -84,7 +85,7 @@ export class WeatherPage implements OnInit {
         if(r && r.features && r.features.length > 0) {
           let swedishResult = r.features.filter(s => s.properties.country == "Sweden");
           if(swedishResult && swedishResult.length > 0) {
-          console.log(swedishResult[0].geometry.coordinates[1].toString());
+          // console.log(swedishResult[0].geometry.coordinates[1].toString());
           this.coord = swedishResult[0].geometry.coordinates[0].toString().substring(0, 6) + ';' + swedishResult[0].geometry.coordinates[1].toString().substring(0, 6);
             this.getWeather();
             this.searchedPlace = swedishResult[0].properties.name + ', ' + swedishResult[0].properties.state + ', ' + swedishResult[0].properties.name;
@@ -92,7 +93,7 @@ export class WeatherPage implements OnInit {
           else this.searchedPlace = 'No search result'
         }
       }
-    }, error => { console.log(error); });
+    }, error => { /*console.log(error)*/; });
   }
 
   getWeatherFromDd(e) { 
@@ -116,7 +117,7 @@ export class WeatherPage implements OnInit {
           this.setRainGraph();
         }
       }
-    }, error => { console.log(error); });
+    }, error => { /*console.log(error)*/; });
   }
 
   private setTempGraph() {

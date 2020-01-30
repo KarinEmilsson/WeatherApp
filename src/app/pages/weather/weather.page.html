@@ -4,8 +4,8 @@
       <div style="float: left" *ngIf="language == 'en'">Weather</div>
       <div style="float: left" *ngIf="language == 'sw'">Väder</div>
       <span style="float: right"> 
-        <img width="15px" (click)="optService.setSelectedLanguage('en')" src="../../../assets/icon/english.jpg">
-        <img width="15px" (click)="optService.setSelectedLanguage('sw')" src="../../../assets/icon/swedish.png">
+        <img width="15px" (click)="setLanguage('en')" src="../../../assets/icon/english.jpg">
+        <img width="15px" (click)="setLanguage('sw')" src="../../../assets/icon/swedish.png">
       </span>
     </ion-title>
   </ion-toolbar>

@@ -21,6 +21,7 @@ export class AvaluatorPage {
   constructor(private optService : OptionsService) { }
 
   get language() { return this.optService.getSelectedLanguage(); }
+  setLanguage(lang: string) { this.optService.setSelectedLanguage(lang); }
 
   private setHeader() {
     switch(this.thisId)

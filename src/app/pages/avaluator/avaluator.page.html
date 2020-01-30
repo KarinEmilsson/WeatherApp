@@ -4,8 +4,8 @@
       <div style="float: left" *ngIf="language == 'en'">Avaluator - {{counter}}p. <span [style.color]="evalStyle">{{eval}}</span></div>
       <div style="float: left" *ngIf="language == 'sw'">Avaluator - {{counter}}p. <span [style.color]="evalStyle">{{evalsw}}</span></div>
       <span style="float: right"> 
-        <img width="15px" (click)="optService.setSelectedLanguage('en')" src="../../../assets/icon/english.jpg">
-        <img width="15px" (click)="optService.setSelectedLanguage('sw')" src="../../../assets/icon/swedish.png">
+        <img width="15px" (click)="setLanguage('en')" src="../../../assets/icon/english.jpg">
+        <img width="15px" (click)="setLanguage('sw')" src="../../../assets/icon/swedish.png">
       </span>
     </ion-title>
   </ion-toolbar>
@@ -19,7 +19,7 @@
         <ion-grid>
           <ion-row>
             <ion-col size="9" style="background-color: mediumblue; color: white;">
-              <div *ngIf="language == 'en'">Regional avalanche danger rating "Considerable" or higher?</div>
+              <div *ngIf="language == 'en'">Is the avalanche danger rating 'Considerable' or higher?</div>
               <div *ngIf="language == 'sw'">Regional lavinprognos "Betydande" eller högre?</div>
             </ion-col>
             <ion-col size="1" style="background-color: mediumblue; color: white;">
@@ -31,7 +31,7 @@
           </ion-row>
           <ion-row>
             <ion-col size="9" style="background-color: mediumblue; color: white;">
-              <div *ngIf="language == 'en'">Is there a persistent or deep persistent slab problem?</div>
+              <div *ngIf="language == 'en'">Is there a persistent or deep persistent slab problem in the snowpack?</div>
               <div *ngIf="language == 'sw'">Finns det ett ihållande eller djupt ihållande problem med snöflak?</div>
             </ion-col>
             <ion-col size="1" style="background-color: mediumblue; color: white;">
@@ -43,7 +43,7 @@
           </ion-row>
           <ion-row>
             <ion-col size="9" style="background-color: mediumblue; color: white;">
-              <div *ngIf="language == 'en'">Are there signs of slab avalanches from today or yesterday?</div>
+              <div *ngIf="language == 'en'">Are there signs of slab avalanches in the area from today or yesterday?</div>
               <div *ngIf="language == 'sw'">Finns det tecken på flakskred från i dag eller igår?</div>
             </ion-col>
             <ion-col size="1" style="background-color: mediumblue; color: white;">
@@ -55,7 +55,7 @@
           </ion-row>
           <ion-row>
             <ion-col size="9" style="background-color: mediumblue; color: white;">
-              <div *ngIf="language == 'en'">Are there signs of snowpack instability, shooting cracks or drum-like sounds?</div>
+              <div *ngIf="language == 'en'">Are there signs of snowpack instability including whumpfs, shooting cracks or drum-like sounds?</div>
               <div *ngIf="language == 'sw'">Finns det tecken på snöpacksinstabilitet, skjutsprickor eller trumliknande ljud?</div>
             </ion-col>
             <ion-col size="1" style="background-color: mediumblue; color: white;">
@@ -67,12 +67,9 @@
           </ion-row>
           <ion-row>
             <ion-col size="9" style="background-color: mediumblue; color: white;">
-              <div *ngIf="language == 'en'">Has there been loading within the past
-                48 hours including > 25 cm of new
-                snow, has there been significant wind
-                transport or rain?</div>
+              <div *ngIf="language == 'en'">Has there been loading within the past 48 hours including roughly 30cm of new snow or more, significant wind transport or rain?</div>
               <div *ngIf="language == 'sw'">Har det dumpat inom
-                48 timmar dvs > 25 cm nysnö, har det varit betydande vind
+                48 timmar, dvs > 25 cm nysnö, har det varit betydande vind
                 transport eller regn?</div>
             </ion-col>
             <ion-col size="1" style="background-color: mediumblue; color: white;">
@@ -84,9 +81,7 @@
           </ion-row>
           <ion-row>
             <ion-col size="9" style="background-color: mediumblue; color: white;">
-              <div *ngIf="language == 'en'">Has there been a recent rapid rise in
-                temperature to near 0 °C, or is the upper
-                snowpack wet due to strong sun, abovefreezing air temperatures or rain?</div>
+              <div *ngIf="language == 'en'">Has there been a recent rapid rise in temperature to near 0 °C, or is the upper snowpack wet due to strong sun, above-freezing air temperatures or rain?</div>
               <div *ngIf="language == 'sw'">Har det skett en snabb temperaturuppgång nyligen 
                 till nära 0 °C, eller är det övre
                 snötäcket slaskigt pga stark sol, överfrysande lufttemperaturer eller regn?</div>
@@ -140,7 +135,7 @@
           </ion-row>
           <ion-row>
             <ion-col size="9" style="background-color: lightskyblue; color: darkblue;">
-              <div *ngIf="language == 'en'">Any gullies, trees or cliffs that increases the consequenses of being caught in an avalanche?</div>
+              <div *ngIf="language == 'en'">Are there gullies, trees or cliffs that increase the consequence of being caught in an avalanche?</div>
               <div *ngIf="language == 'sw'">Några raviner, träd eller klippor som ökar konsekvenserna av att fångas i en lavin?</div>
             </ion-col>
             <ion-col size="1" style="background-color: lightskyblue; color: darkblue;">
@@ -164,7 +159,7 @@
           </ion-row>
           <ion-row>
             <ion-col size="9" style="background-color: lightskyblue; color: darkblue;">
-              <div *ngIf="language == 'en'">Is the slope in the alpine, in a sparsely treed area or in open forest?</div>
+              <div *ngIf="language == 'en'">Is the slope in the alpine, in a sparsely treed area or in open forest (cut-block, burn, wide-spaced glades)?</div>
               <div *ngIf="language == 'sw'">Är sluttningen i det alpina, i ett glessträckt område eller i öppen skog?</div>
             </ion-col>
             <ion-col size="1" style="background-color: lightskyblue; color: darkblue;">
