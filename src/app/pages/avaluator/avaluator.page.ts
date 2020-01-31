@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { OptionsService } from '../../services/options.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-avaluator',
@@ -10,6 +11,7 @@ export class AvaluatorPage {
 
   private countAvalanceConditions: number = 0;
   private countTerrainCharacteristics: number = 0;
+  subscription: Subscription;
   thisId = '0-0';
   counter: number = 0;
   eval: string = "Caution";
@@ -17,10 +19,14 @@ export class AvaluatorPage {
   evalStyle: string = "#424242";
   degrees1pChecked = false;
   degrees2pChecked = false;
+  language: string;
 
-  constructor(private optService : OptionsService) { }
+  constructor(private optService : OptionsService) {
+    this.subscription = this.optService.options$.subscribe(data => {
+      this.language = data.selectedLanguage;
+    });
+  }
 
-  get language() { return this.optService.getSelectedLanguage(); }
   setLanguage(lang: string) { this.optService.setSelectedLanguage(lang); }
 
   private setHeader() {
@@ -80,5 +86,9 @@ export class AvaluatorPage {
       {
         this.degrees1pChecked = false;
       }
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }

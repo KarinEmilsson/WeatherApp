@@ -5,9 +5,9 @@ import { PlaceModel } from '../../models/place.model';
 import { PrecipitationCategories } from '../../models/precipitationCategories.enum';
 import { WeatherSymbols } from '../../models/weatherSymbols.enum';
 import { OptionsService } from '../../services/options.service';
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef } from '@angular/core';
 import { Chart } from 'chart.js';
-import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import * as moment from 'moment';
 
 @Component({
@@ -15,13 +15,14 @@ import * as moment from 'moment';
   templateUrl: 'weather.page.html',
   styleUrls: ['weather.page.scss']
 })
-export class WeatherPage implements OnInit {
+export class WeatherPage implements OnInit, OnDestroy {
   
+  subscription: Subscription;
   searchedPlace = '';
   searchedPlaces: { name, coords }[] = [];
   coord = '13.011;63.423';
-  search: Observable<any>;
   weather: WeatherModel;
+  language: string;
 
   weatherChart;
   weatherWindChart;
@@ -41,12 +42,16 @@ export class WeatherPage implements OnInit {
     private weatherService: WeatherService, 
     private coordinatesService: CoordinatesService, 
     private elementRef: ElementRef, 
-    private optService: OptionsService) {
-    this.getLocationAndWeather();
-  }
+    private optService: OptionsService) 
+    {
+      this.subscription = this.optService.options$.subscribe(data => {
+        this.language = data.selectedLanguage;
+        this.getWeather(); 
+      });
+      this.getLocationAndWeather();
+    }
 
-  get language() { return this.optService.getSelectedLanguage(); }
-  setLanguage(value) { this.optService.setSelectedLanguage(value); }
+  setLanguage(lang: string) { this.optService.setSelectedLanguage(lang); }
   get precipitationCategories() { return PrecipitationCategories; }
   get weatherSymbols() { return WeatherSymbols; }
 
@@ -430,4 +435,8 @@ export class WeatherPage implements OnInit {
   }
 
   ngOnInit() { }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
 }

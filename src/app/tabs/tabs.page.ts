@@ -1,28 +1,40 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { OptionsService } from '../services/options.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-tabs',
   templateUrl: 'tabs.page.html',
   styleUrls: ['tabs.page.scss']
 })
-export class TabsPage {
+export class TabsPage implements OnDestroy {
 
-  tabs: {tab, icon, name}[] = [{
-    tab: 'avaluator',
-    icon: 'apps',
-    name: 'Avaluator'
-  },
-  {
-    tab: 'weather',
-    icon: 'flash',
-    name: this.optionsService.getSelectedLanguage() == 'sw' ? 'Väder' : 'Weather'
-  },
-  {
-    tab: 'forecast',
-    icon: 'send',
-    name: this.optionsService.getSelectedLanguage() == 'sw' ? 'Lavinprognos' : 'Avalanche forecast'
-  }];
+  subscription: Subscription;
+  language: string;
+  tabs: { tab, icon, name }[] = [];
 
-  constructor(private optionsService: OptionsService) { }
+  constructor(private optService: OptionsService) { 
+    this.subscription = this.optService.options$.subscribe(data => {
+      this.language = data.selectedLanguage;
+      this.tabs = [{
+        tab: 'avaluator',
+        icon: 'apps',
+        name: 'Avaluator'
+      },
+      {
+        tab: 'weather',
+        icon: 'flash',
+        name: this.language == 'sw' ? 'Väder' : 'Weather'
+      },
+      {
+        tab: 'forecast',
+        icon: 'send',
+        name: this.language == 'sw' ? 'Lavinprognos' : 'Avalanche forecast'
+      }];
+    });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
 }
