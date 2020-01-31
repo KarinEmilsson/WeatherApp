@@ -13,6 +13,11 @@
 
 <ion-content>
   <ion-searchbar [(ngModel)]="searchedPlace" (search)="searchPlace($event)"></ion-searchbar>
+  <ion-list *ngIf="searchedPlaces && searchedPlaces.length > 1">
+    <ion-item *ngFor="let item of searchedPlaces" (click)="selectSearchedPlace(item.name, item.coords)">
+      {{item.name}}
+    </ion-item>
+  </ion-list>
   <ion-select [(ngModel)]="coord" (ionChange)="getWeatherFromDd($event)" interface="popover" [placeholder]="language == 'en' ? 'Select place' : 'Välj plats'">
     <ion-select-option *ngFor="let p of places;" [value]="p.coord">{{p.place}}</ion-select-option>
   </ion-select>

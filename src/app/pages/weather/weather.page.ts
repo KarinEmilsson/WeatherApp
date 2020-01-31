@@ -18,6 +18,7 @@ import * as moment from 'moment';
 export class WeatherPage implements OnInit {
   
   searchedPlace = '';
+  searchedPlaces: { name, coords }[] = [];
   coord = '13.011;63.423';
   search: Observable<any>;
   weather: WeatherModel;
@@ -50,6 +51,7 @@ export class WeatherPage implements OnInit {
   get weatherSymbols() { return WeatherSymbols; }
 
   getLocationAndWeather() {
+    this.searchedPlaces = [];
     //this.geolocation.getCurrentPosition((resp) => {
     navigator.geolocation.getCurrentPosition((resp) => {
       let lon : string = resp.coords.longitude + '';
@@ -79,16 +81,23 @@ export class WeatherPage implements OnInit {
   }
 
   searchPlace(e) {
+    this.searchedPlaces = [];
     this.coordinatesService.searchPlace(e.currentTarget.value).subscribe(result => {
       if(result) {
         let r: PlaceModel = result;
         if(r && r.features && r.features.length > 0) {
           let swedishResult = r.features.filter(s => s.properties.country == "Sweden");
           if(swedishResult && swedishResult.length > 0) {
-          // console.log(swedishResult[0].geometry.coordinates[1].toString());
-          this.coord = swedishResult[0].geometry.coordinates[0].toString().substring(0, 6) + ';' + swedishResult[0].geometry.coordinates[1].toString().substring(0, 6);
-            this.getWeather();
-            this.searchedPlace = swedishResult[0].properties.name + ', ' + swedishResult[0].properties.state + ', ' + swedishResult[0].properties.name;
+            if(swedishResult.length == 1) {
+              this.coord = swedishResult[0].geometry.coordinates[0].toString().substring(0, 6) + ';' + swedishResult[0].geometry.coordinates[1].toString().substring(0, 6);
+              this.getWeather();
+              this.searchedPlace = swedishResult[0].properties.name + ', ' + swedishResult[0].properties.state + ', ' + swedishResult[0].properties.name;
+            }
+            else {
+                swedishResult.forEach(element => {
+                  this.searchedPlaces.push({ name: element.properties.name + ', ' + element.properties.state + ', ' + element.properties.name, coords: element.geometry.coordinates[0].toString().substring(0, 6) + ';' + element.geometry.coordinates[1].toString().substring(0, 6)});
+              });
+            }
           }
           else this.searchedPlace = 'No search result'
         }
@@ -96,7 +105,15 @@ export class WeatherPage implements OnInit {
     }, error => { /*console.log(error)*/; });
   }
 
+  selectSearchedPlace(name: string, coords: string) {
+    this.coord = coords;
+    this.searchedPlace = name;
+    this.getWeather();
+    this.searchedPlaces = [];
+  }
+
   getWeatherFromDd(e) { 
+    this.searchedPlaces = [];
     let checkIfChangedValueIsChangedFromDropDown = this.places.filter(p => p.coord == e.currentTarget.value)[0]; 
     if(checkIfChangedValueIsChangedFromDropDown) {
       this.searchedPlace = '';
